@@ -1,6 +1,6 @@
 # To Make Topcode, To Be TopPromgramer?<br> Keep Going Step by Step!
-1. TopCode 알고리즘 문제 풀이
-http://www.yes24.com/Product/Goods/11259881<br>
+1. TopCode 알고리즘 문제 풀이<br>
+http://www.yes24.com/Product/Goods/11259881
 2. 프로그래머스 알고리즘 문제 풀이<br>
 https://programmers.co.kr/
 3. 백준 알고리즘 문제 풀이<br>
