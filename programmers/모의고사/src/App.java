@@ -48,7 +48,7 @@ class Solution {
         int maxValue = 0;
 
         List<Integer> v = new ArrayList<>();
-
+       
         for(Integer key : keys){
             if(maxValue < result.get(key)){
                 v.clear();
@@ -62,6 +62,12 @@ class Solution {
                 maxValue = result.get(key);
             }
         }
+        
+        // Stream 처리 가능 아래와 같은 방식으로 stream 공부 더하기
+//         int[] result = result.stream().filter(x -> {
+//                 x.foreach(x-> x.get())
+//             }
+//             );
 
         Collections.sort(v);
 
