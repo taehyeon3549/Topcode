@@ -47,34 +47,34 @@ class Solution {
         // return tt.size();
     }
 
+    /**
+     * 남의 코드..... 현타 오네...
+     */
     public void recursive(String comb, String others) { 
-        // 1. 현재 조합을 set에 추가한다. 
+        
         if (!comb.equals("")) {
             numbersSet.add(Integer.valueOf(comb)); 
         }
         
-        // 2. 남은 숫자 중 한 개를 더해 새로운 조합을 만든다. 
         for (int i = 0; i < others.length(); i++) {
             recursive(comb + others.charAt(i), others.substring(0, i) + others.substring(i + 1)); 
         }
     }
 
     public boolean isPrime(int num) { 
-        // 1. 0과 1은 소수가 아니다 
+    
         if (num == 0 || num == 1) 
             return false; 
         
-        // 2. 에라토스테네스의 체의 limit 숫자를 계산한다. 
         int lim = (int)Math.sqrt(num); 
         
-        // 3. 에라토스테네스의 체에 따라 lim까지 배수 여부를 확인한다. 
         for (int i = 2; i <= lim; i++) 
             if (num % i == 0) return false; 
         
         return true; 
     }
 
-
+    /* 남의 코드 끝 */
 
     void serach(List<String> list , boolean[] visited ,int startIdx, int howMany, List<String> result){
         if(howMany == 0){
@@ -103,9 +103,7 @@ class Solution {
 
     boolean numCheck(int num){
         for (int i = 2; i < num; i++) {
-            // 1과 num 자신 외에 나누어지는 수가 있는지 검사할 조건문
             if (num % i == 0) {
-                // 나누어지는 수가 있을 경우 isPrime의 값을 true로 바꾼다.
                 return true;
             }
         }
