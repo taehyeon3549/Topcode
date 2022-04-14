@@ -52,8 +52,11 @@ class Solution {
         this.basePee = fees[3];
 
 
-        Map<String, CarState> carsHist = new HashMap();
         
+
+        Map<String, List<String>> carHist2 = new HashMap<>();
+        
+
 
         Stream.of(records).forEach(x->{
             String[] splitRecord = x.split(" ");
@@ -62,61 +65,113 @@ class Solution {
             String carNumber = splitRecord[1];
             String state = splitRecord[2];
 
+            if(!carHist2.containsKey(carNumber)){
+                // System.out.println(carHist2.toString());
 
-            int pee = 0;
+                carHist2.put(carNumber, new ArrayList<String>(Arrays.asList(time)));
+            }else{
+                // System.out.println(carHist2.toString());
 
-            
-            // 이미 기록이 있다면
-            if(carsHist.containsKey(carNumber)){ 
-
-                if(carsHist.get(carNumber).getLastRecordState().equals("IN")){
-
-                    String[] nowTime =  time.split(":");
-                    String[] lastTime =  carsHist.get(carNumber).getLastRecordTime().split(":");
-
-
-                    int hour = Integer.parseInt(nowTime[0])-Integer.parseInt(lastTime[0]);
-                    int min = Integer.parseInt(nowTime[1])-Integer.parseInt(lastTime[1]);
-
-                    System.out.println("[[" + carNumber + "]]");
-                    pee = countPee(hour, min);
-                }else{
-                    pee = carsHist.get(carNumber).getTotalPee();
-                }
+                carHist2.get(carNumber).add(time);
             }
-
-            carsHist.put(carNumber, new CarState(time,state, pee));
-
         });
 
+        TreeMap<String,Integer> result = new TreeMap<>();
+        
+        Set<String> keys = carHist2.keySet();
 
-        Set<String> carsHistKeys = carsHist.keySet();
-
-        for(String carsHistKey : carsHistKeys){
-            if(carsHist.get(carsHistKey).getLastRecordState().equals("IN")){
-                
-                String[] lastTime =  carsHist.get(carsHistKey).getLastRecordTime().split(":");
-
-                int hour = 23-Integer.parseInt(lastTime[0]);
-                int min = 59-Integer.parseInt(lastTime[1]);
-
-                System.out.println("[[" + carsHistKey + "]]");
-                carsHist.get(carsHistKey).setTotalPee(countPee(hour, min));
+        for(String key : keys){
+            if(carHist2.get(key).size()%2 != 0){
+                carHist2.get(key).add("23:59");
             }
-        }
 
-        System.out.println(carsHist.toString());
+            int totalMin = 0;
+
+            for(int i =1; i<=carHist2.get(key).size(); i+=2){
+                String[] nowTime =  carHist2.get(key).get(i).split(":"); 
+                String[] lastTime =  carHist2.get(key).get(i-1).split(":"); 
+
+                int hour = Integer.parseInt(nowTime[0])-Integer.parseInt(lastTime[0]);
+                int min = Integer.parseInt(nowTime[1])-Integer.parseInt(lastTime[1]);
+
+                totalMin += (hour * 60 + min);
+            }
+
+            System.out.println("[[" + key + "]]");
+            System.out.println("총 사용 시간 >> " + totalMin);
+
+            result.put(key, countPee(totalMin));
+
+
+        }
+               
+        
+        System.out.println(result.toString());
+
+
+        // Map<String, CarState> carsHist = new HashMap();
+
+        // Stream.of(records).forEach(x->{
+        //     String[] splitRecord = x.split(" ");
+
+        //     String time = splitRecord[0];
+        //     String carNumber = splitRecord[1];
+        //     String state = splitRecord[2];
+
+        //     int pee = 0;
+
+            
+        //     // 이미 기록이 있다면
+        //     if(carsHist.containsKey(carNumber)){ 
+
+        //         if(carsHist.get(carNumber).getLastRecordState().equals("IN")){
+
+        //             String[] nowTime =  time.split(":");
+        //             String[] lastTime =  carsHist.get(carNumber).getLastRecordTime().split(":");
+
+
+        //             int hour = Integer.parseInt(nowTime[0])-Integer.parseInt(lastTime[0]);
+        //             int min = Integer.parseInt(nowTime[1])-Integer.parseInt(lastTime[1]);
+
+        //             System.out.println("[[" + carNumber + "]]");
+        //             pee = countPee(hour, min);
+        //         }else{
+        //             pee = carsHist.get(carNumber).getTotalPee();
+        //         }
+        //     }
+
+        //     carsHist.put(carNumber, new CarState(time,state, pee));
+
+        // });
+
+
+        // Set<String> carsHistKeys = carsHist.keySet();
+
+        // for(String carsHistKey : carsHistKeys){
+        //     if(carsHist.get(carsHistKey).getLastRecordState().equals("IN")){
+                
+        //         String[] lastTime =  carsHist.get(carsHistKey).getLastRecordTime().split(":");
+
+        //         int hour = 23-Integer.parseInt(lastTime[0]);
+        //         int min = 59-Integer.parseInt(lastTime[1]);
+
+        //         System.out.println("[[" + carsHistKey + "]]");
+        //         carsHist.get(carsHistKey).setTotalPee(countPee(hour, min));
+        //     }
+        // }
+
+        // System.out.println(carsHist.toString());
        
 
         int[] answer = {};
         return answer;
     }
 
-    int countPee(int hour, int min){
-        int pee = defaultPee + (( hour * 60 + min - defaultTime ) / baseTime) * basePee;
+    int countPee(int totalMin){
+        int pee = defaultPee + Math.ceil( (( totalMin - defaultTime ) / baseTime) ) * basePee;
 
-
-        System.out.println(pee);
+        System.out.println("요금 계산 >> " + pee);
+        System.out.println(defaultPee + "+" + "(("+ totalMin + "-" + defaultTime +") / "+baseTime+") *"+ basePee);
         return pee < 5000 ? 5000 : pee;
     }
 }
